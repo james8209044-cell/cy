@@ -3,97 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2026 芬蘭極光之旅</title>
-    <!-- 引入 Google Fonts 優化英數字體 -->
+    <title>芬蘭極光 11 日遊</title>
+    <!-- 引入質感字體 -->
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary: #005695; /* 芬蘭藍 */
-            --primary-dark: #003a66;
+            /* 極光配色系統 */
+            --primary: #005695; 
+            --aurora-green: #00c48d;
+            --aurora-bg: linear-gradient(135deg, #0b2545 0%, #005695 60%, #008a70 100%);
+            
             --primary-light: #e6f2fa;
-            --accent: #ff7e67;
             --text: #2c3e50;
             --text-light: #6c757d;
-            --bg: #f0f4f8;
+            --bg: #f4f7f6;
             --white: #ffffff;
-            --radius: 16px;
+            --radius: 18px;
         }
 
         body {
-            /* 字體設定：優先使用蘋果儷黑 -> 微軟正黑 -> 系統預設 */
-            font-family: "DM Sans", "PingFang TC", "Microsoft JhengHei", "Heiti TC", sans-serif;
+            /* 強制使用微軟正黑體與蘋果黑體 */
+            font-family: "PingFang TC", "Microsoft JhengHei", "Heiti TC", sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
             padding: 0;
-            padding-bottom: 80px;
-            -webkit-font-smoothing: antialiased; /* 讓字體更清晰 */
+            padding-bottom: 90px;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* --- Header 區域 --- */
         .app-header {
-            background: linear-gradient(160deg, #0b2545 0%, #005695 100%);
+            background: var(--aurora-bg);
             color: white;
-            padding: 30px 20px 40px 20px;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-            box-shadow: 0 10px 20px rgba(0, 86, 149, 0.2);
+            padding: 35px 20px 45px 20px;
+            border-bottom-left-radius: 35px;
+            border-bottom-right-radius: 35px;
+            box-shadow: 0 10px 25px rgba(0, 86, 149, 0.25);
             text-align: center;
             position: relative;
             overflow: hidden;
         }
 
-        /* 頂部標題 */
+        /* 極光流動動畫 */
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: rotate 20s linear infinite;
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .header-content { position: relative; z-index: 2; }
+
         .header-top {
-            font-size: 14px;
-            letter-spacing: 1px;
-            opacity: 0.8;
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            opacity: 0.9;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .header-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
         }
 
         /* 巨大的主要 ICON */
         .hero-icon {
-            font-size: 80px;
+            font-size: 72px;
             margin: 10px 0;
             display: inline-block;
-            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
-            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
+            animation: float 4s ease-in-out infinite;
         }
 
-        /* 漂浮動畫 */
         @keyframes float {
             0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-12px); }
             100% { transform: translateY(0px); }
         }
 
-        .weather-info {
-            margin-top: 10px;
-        }
-        .weather-temp {
-            font-size: 32px;
-            font-weight: 700;
-            margin: 0;
-            line-height: 1.2;
-        }
-        .weather-desc {
-            font-size: 15px;
-            opacity: 0.9;
-            margin-top: 4px;
-        }
+        .weather-info { margin-top: 10px; }
+        .weather-temp { font-size: 28px; font-weight: 700; margin: 0; line-height: 1.2; }
+        .weather-desc { font-size: 14px; opacity: 0.95; margin-top: 4px; }
 
         /* --- 日期 Tabs --- */
         .tabs-wrapper {
-            margin-top: -25px; /* 往上重疊 Header */
-            padding-left: 20px;
+            margin-top: -30px;
+            padding-left: 15px;
+            position: relative;
+            z-index: 5;
         }
 
         .tabs-container {
             display: flex;
             overflow-x: auto;
-            padding: 5px 5px 15px 5px; /* 預留陰影空間 */
+            padding: 5px 5px 20px 5px;
             scrollbar-width: none;
             -webkit-overflow-scrolling: touch;
         }
@@ -102,77 +115,61 @@
         .tab {
             flex: 0 0 auto;
             background: var(--white);
-            min-width: 60px;
-            padding: 12px 16px;
-            border-radius: 14px;
-            margin-right: 12px;
+            min-width: 65px;
+            padding: 14px 12px;
+            border-radius: 16px;
+            margin-right: 10px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             border: 1px solid rgba(0,0,0,0.02);
         }
 
-        .tab-date {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text);
-            display: block;
-        }
-        .tab-day {
-            font-size: 12px;
-            color: var(--text-light);
-            margin-top: 2px;
-            display: block;
-        }
+        .tab-date { font-size: 15px; font-weight: 700; color: var(--text); display: block; margin-bottom: 3px; }
+        .tab-day { font-size: 12px; color: var(--text-light); display: block; text-transform: uppercase; }
 
         .tab.active {
-            background: var(--primary);
-            box-shadow: 0 8px 15px rgba(0, 86, 149, 0.3);
-            transform: translateY(-2px);
+            background: var(--text);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            transform: translateY(-4px);
         }
         .tab.active .tab-date, 
-        .tab.active .tab-day {
-            color: white;
-        }
+        .tab.active .tab-day { color: var(--aurora-green); }
 
         /* --- 行程內容 --- */
-        .content-container {
-            padding: 10px 20px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+        .content-container { padding: 10px 20px; max-width: 600px; margin: 0 auto; }
 
-        .day-title {
+        .day-header {
             text-align: center;
-            margin: 20px 0;
-            color: var(--primary-dark);
-            font-size: 18px;
-            font-weight: 700;
+            margin: 25px 0 15px 0;
+            color: var(--primary);
         }
+        .day-header h2 { font-size: 20px; margin: 0; font-weight: 800; }
+        .day-header p { font-size: 14px; color: var(--text-light); margin: 5px 0 0 0; }
 
         .timeline-item {
             position: relative;
-            padding-left: 36px;
-            padding-bottom: 30px;
-            border-left: 2px dashed #cbd5e1;
+            padding-left: 42px;
+            padding-bottom: 35px;
+            border-left: 2px dashed #d1d9e6;
         }
         .timeline-item:last-child { border-left: 2px solid transparent; }
 
         .timeline-icon {
             position: absolute;
-            left: -19px; /* (Icon width 36 + border 2) / 2 */
+            left: -21px;
             top: 0;
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             background: var(--white);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border: 2px solid var(--primary-light);
+            font-size: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            border: 3px solid var(--primary-light);
             z-index: 2;
         }
 
@@ -181,78 +178,60 @@
             color: var(--primary);
             font-weight: 700;
             margin-bottom: 8px;
-            display: block;
-            margin-left: 4px;
+            display: inline-block;
+            background: rgba(0, 86, 149, 0.08);
+            padding: 2px 8px;
+            border-radius: 6px;
         }
 
         .card {
             background: var(--white);
             border-radius: var(--radius);
-            padding: 18px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
             border: 1px solid rgba(0,0,0,0.02);
             transition: transform 0.2s;
         }
-        
-        .card:active {
-            transform: scale(0.98);
-        }
+        .card:active { transform: scale(0.98); }
 
-        .card-title {
-            font-size: 17px;
-            font-weight: 700;
-            margin: 0 0 6px 0;
-            color: var(--text);
-            line-height: 1.4;
-        }
+        .card-title { font-size: 17px; font-weight: 700; margin: 0 0 8px 0; color: var(--text); line-height: 1.4; }
+        .card-desc { font-size: 15px; color: #555; margin-bottom: 12px; line-height: 1.6; text-align: justify; }
 
-        .card-desc {
-            font-size: 15px;
-            color: #555;
-            margin-bottom: 12px;
-            line-height: 1.6;
-            text-align: justify;
+        /* 清單樣式 */
+        .card-list {
+            margin: 10px 0;
+            padding-left: 20px;
+            font-size: 14px;
+            color: #666;
         }
+        .card-list li { margin-bottom: 5px; }
 
         /* Tags */
-        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-        .tag {
-            font-size: 12px;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-weight: 500;
-        }
-        .tag.hotel { background: #e3f2fd; color: #1565c0; }
-        .tag.food { background: #fff3e0; color: #e65100; }
-        .tag.train { background: #f3e5f5; color: #7b1fa2; }
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .tag { font-size: 11px; padding: 5px 10px; border-radius: 20px; font-weight: 600; letter-spacing: 0.5px; }
+        .tag.hotel { background: #e8f4fd; color: #005695; }
+        .tag.food { background: #fff5e6; color: #d97706; }
+        .tag.transport { background: #f3e8ff; color: #7e22ce; }
+        .tag.activity { background: #e6fffa; color: #0d9488; }
 
         /* Links */
         .link-btn {
             display: inline-flex;
             align-items: center;
-            margin-top: 12px;
+            margin-top: 15px;
             font-size: 13px;
             color: var(--primary);
             text-decoration: none;
             font-weight: 600;
-            background: var(--primary-light);
-            padding: 6px 12px;
-            border-radius: 8px;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s;
         }
-        .link-btn:after {
-            content: '→';
-            margin-left: 5px;
-            transition: margin 0.2s;
-        }
+        .link-btn:hover { border-bottom: 1px solid var(--primary); }
+        .link-btn::after { content: '↗'; margin-left: 4px; font-size: 12px; }
 
         /* Animation */
-        .fade-in {
-            animation: fadeIn 0.4s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
     </style>
 </head>
@@ -260,191 +239,330 @@
 
     <!-- Header -->
     <div class="app-header">
-        <div class="header-top">FINLAND TRIP 2026</div>
-        
-        <!-- 動態更新的大圖示 -->
-        <div class="hero-icon" id="heroIcon">✈️</div>
-        
-        <div class="weather-info">
-            <div class="weather-temp" id="weatherTemp">Helsinki</div>
-            <div class="weather-desc" id="weatherDesc">3月歷史均溫 1°C</div>
+        <div class="header-content">
+            <div class="header-top">LAPLAND ESCAPE</div>
+            <div class="header-title">芬蘭 & 瑞典 11 天極光之旅</div>
+            
+            <!-- 動態大圖示 -->
+            <div class="hero-icon" id="heroIcon">✈️</div>
+            
+            <div class="weather-info">
+                <div class="weather-temp" id="weatherInfo">赫爾辛基</div>
+                <div class="weather-desc" id="weatherDate">2026/03/28</div>
+            </div>
         </div>
     </div>
 
-    <!-- Date Tabs -->
+    <!-- Scrollable Date Tabs -->
     <div class="tabs-wrapper">
         <div class="tabs-container" id="tabsContainer">
-            <!-- Tabs injected by JS -->
+            <!-- JavaScript 會自動產生這裡的按鈕 -->
         </div>
     </div>
 
-    <!-- Timeline -->
-    <div class="content-container" id="timelineContainer">
-        <!-- Itinerary injected by JS -->
+    <!-- Daily Content -->
+    <div class="content-container" id="contentContainer">
+        <!-- JavaScript 會自動產生這裡的內容 -->
     </div>
 
     <script>
-        // 資料設定：icon 欄位現在代表「當天的主視覺」
+        // --- 行程資料庫 (完全繁體中文化) ---
         const tripData = [
             {
                 date: "3/28",
-                day: "Sat",
+                day: "週六",
                 fullDate: "2026/03/28",
-                city: "Helsinki",
-                temp: "1°C",
-                icon: "🛬", // 飛機降落
-                desc: "抵達赫爾辛基",
+                title: "第 1 天 - 抵達赫爾辛基",
+                location: "赫爾辛基",
+                icon: "🛬", 
                 events: [
-                    { time: "05:40", icon: "✈️", title: "班機抵達", desc: "降落赫爾辛基機場，接駁至市中心。", link: "https://www.finavia.fi/en/airports/helsinki-airport", linkText: "機場資訊" },
-                    { time: "14:00", icon: "🏨", title: "入住 Radisson RED", desc: "辦理入住手續。飯店風格現代，位於市中心。", tags: ["hotel", "food"] },
-                    { time: "16:00", icon: "🚶", title: "市區自由活動", desc: "調整時差，漫步中央車站周邊。", link: "https://www.myhelsinki.fi/zh", linkText: "旅遊指南" }
+                    { 
+                        time: "上午", 
+                        icon: "🚙", 
+                        title: "機場接駁 (Transfer)", 
+                        desc: "專車接送：從 HEL 機場前往市中心飯店。(請務必提前提供航班資訊)",
+                        tags: ["transport"]
+                    },
+                    { 
+                        time: "15:00", 
+                        icon: "🏨", 
+                        title: "入住: Radisson RED", 
+                        desc: "位於赫爾辛基市中心，步行 5 分鐘可達美術館。房間有空調、私人衛浴。",
+                        link: "https://www.radissonhotels.com/en-us/hotels/radisson-red-helsinki", 
+                        linkText: "飯店官網",
+                        tags: ["hotel"]
+                    }
                 ]
             },
             {
                 date: "3/29",
-                day: "Sun",
+                day: "週日",
                 fullDate: "2026/03/29",
-                city: "Night Train",
-                temp: "0°C",
-                icon: "🚂", // 火車
-                desc: "前進北極圈",
+                title: "第 2 天 - 臥鋪火車北上",
+                location: "赫爾辛基 > 火車",
+                icon: "🚂",
                 events: [
-                    { time: "Morning", icon: "🏙️", title: "赫爾辛基觀光", desc: "自由參觀頌歌圖書館 (Oodi) 或岩石教堂。" },
-                    { time: "19:29", icon: "🛌", title: "VR 夜舖火車", desc: "搭乘 Night train 265 前往羅瓦涅米 (私人衛浴)。", link: "https://www.vr.fi/en", linkText: "VR 官網", tags: ["train"] }
+                    { 
+                        time: "白天", 
+                        icon: "🏙️", 
+                        title: "赫爾辛基自由活動", 
+                        desc: "享受市區觀光，傍晚前往中央車站準備搭車。",
+                        tags: ["activity"]
+                    },
+                    { 
+                        time: "19:29", 
+                        icon: "🛌", 
+                        title: "VR 夜舖火車 (265車次)", 
+                        desc: "前往羅瓦涅米 (Rovaniemi) 的夜舖火車。\n包含：私人包廂 (En suite with private shower)。",
+                        list: ["發車：19:29 (赫爾辛基)", "抵達：07:20 (羅瓦涅米)", "備註：火車上有餐車可購買食物 (自費)"],
+                        link: "https://www.vr.fi/en",
+                        linkText: "VR 芬蘭國鐵",
+                        tags: ["transport"]
+                    }
                 ]
             },
             {
                 date: "3/30",
-                day: "Mon",
+                day: "週一",
                 fullDate: "2026/03/30",
-                city: "Rovaniemi",
-                temp: "-6°C",
-                icon: "❄️", // 雪花/城堡
-                desc: "冰雪城堡之夜",
+                title: "第 3 天 - 冰雪城堡晚餐",
+                location: "羅瓦涅米",
+                icon: "🏰",
                 events: [
-                    { time: "07:20", icon: "📍", title: "抵達羅瓦涅米", desc: "前往民宿放置行李，開始探索拉普蘭。" },
-                    { time: "10:00", icon: "🛍️", title: "市區觀光", desc: "逛逛市區百貨或當地二手店 Fida。", tags: ["hotel"] },
-                    { time: "18:00", icon: "🏰", title: "北極冰雪城堡", desc: "參觀由冰雪打造的城堡並享用晚餐。", link: "https://experience365.fi/snowcastle-of-kemi/", linkText: "城堡官網", tags: ["food"] }
+                    { 
+                        time: "07:20", 
+                        icon: "📍", 
+                        title: "抵達羅瓦涅米", 
+                        desc: "抵達聖誕老人的故鄉。" 
+                    },
+                    { 
+                        time: "16:00", 
+                        icon: "🏠", 
+                        title: "入住: Arctic Retro Luxe", 
+                        desc: "市中心公寓，設施齊全 (含廚房、洗碗機、智慧電視)。",
+                        tags: ["hotel"]
+                    },
+                    { 
+                        time: "17:00", 
+                        icon: "🍽️", 
+                        title: "北極冰雪城堡參觀 & 晚餐", 
+                        desc: "參觀冰雕藝術，並在冰餐廳享用三道式拉普蘭晚餐。",
+                        list: ["前菜：森林蘑菇湯", "主菜(選一)：烤麋鹿肉 或 北極鮭魚 或 煙燻豆腐", "甜點：覆盆子香草慕斯", "體驗：Ice Bar 喝一杯 (自費)"],
+                        link: "https://arcticsnowhotel.fi/",
+                        linkText: "冰雪飯店官網",
+                        tags: ["food", "activity"]
+                    }
                 ]
             },
             {
                 date: "3/31",
-                day: "Tue",
+                day: "週二",
                 fullDate: "2026/03/31",
-                city: "Rovaniemi",
-                temp: "-7°C",
-                icon: "🦌", // 馴鹿
-                desc: "聖誕老人與極光",
+                title: "第 4 天 - 聖誕老人與極光",
+                location: "羅瓦涅米",
+                icon: "🎅",
                 events: [
-                    { time: "Morning", icon: "🦌", title: "馴鹿雪橇體驗", desc: "400公尺體驗 + 農場探訪，感受拉普蘭傳統。", link: "https://santaclausvillage.info/", linkText: "活動資訊" },
-                    { time: "Noon", icon: "🎅", title: "聖誕老人村", desc: "跨越北極圈線、與聖誕老人合照、寄明信片。" },
-                    { time: "15:00", icon: "🐕", title: "哈士奇雪橇", desc: "500公尺體驗，體驗極地奔馳的快感。" },
-                    { time: "Night", icon: "🌌", title: "追極光 x 燒烤", desc: "夜晚追逐歐若拉，享用拉普蘭營火燒烤。", tags: ["food"] }
+                    { 
+                        time: "09:00", 
+                        icon: "🦌", 
+                        title: "必玩精選行程 (6小時)", 
+                        desc: "一次滿足所有拉普蘭體驗！(此行程不含午餐)",
+                        list: ["聖誕老人村 & 遇見 Santa 本人", "馴鹿雪橇體驗 & 農場參觀", "哈士奇雪橇體驗 (Husky Sled)", "跨越北極圈線"],
+                        tags: ["activity"]
+                    },
+                    { 
+                        time: "20:30", 
+                        icon: "🌌", 
+                        title: "極光狩獵 x 拉普蘭燒烤", 
+                        desc: "前往無光害地區追極光 (3小時)。",
+                        list: ["前往最佳觀測點", "營火燒烤：烤香腸、麵包、烤棉花糖", "備註：極光為自然現象無法保證看到"],
+                        tags: ["food", "activity"]
+                    }
                 ]
             },
             {
                 date: "4/1",
-                day: "Wed",
+                day: "週三",
                 fullDate: "2026/04/01",
-                city: "Sweden/Kemi",
-                temp: "-5°C",
-                icon: "🚢", // 破冰船
-                desc: "破冰船與玻璃屋",
+                title: "第 5 天 - 瑞典破冰船",
+                location: "瑞典 / Apukka",
+                icon: "🚢",
                 events: [
-                    { time: "09:00", icon: "🧊", title: "Polar Explorer", desc: "瑞典破冰船體驗，穿著龍蝦裝漂浮在冰海上。", link: "https://www.icebreaker.fi/", linkText: "破冰船官網" },
-                    { time: "Afternoon", icon: "🇸🇪", title: "瑞典 IKEA", desc: "邊境打卡與購物。" },
-                    { time: "Evening", icon: "🛖", title: "入住玻璃屋", desc: "Glass Igloo，躺在溫暖床上看星空。", tags: ["hotel"] }
+                    { 
+                        time: "06:50", 
+                        icon: "🚌", 
+                        title: "出發前往瑞典", 
+                        desc: "1.5小時車程前往瑞典港口 (Kemi/Axelsvik)。" 
+                    },
+                    { 
+                        time: "上午", 
+                        icon: "❄️", 
+                        title: "破冰船 & 龍蝦裝漂浮", 
+                        desc: "2小時破冰船體驗。參觀船長室、引擎室，並穿著保暖龍蝦裝在冰海漂浮 (Ice Floating)。",
+                        link: "https://www.icebreaker.fi/",
+                        linkText: "Polar Explorer 官網",
+                        tags: ["activity"]
+                    },
+                    { 
+                        time: "16:00", 
+                        icon: "🛖", 
+                        title: "入住: Apukka 玻璃屋", 
+                        desc: "入住絕美玻璃屋 (Glass Igloo)，躺在床上看星空與極光。",
+                        link: "https://apukkaresort.fi/",
+                        linkText: "Apukka 度假村",
+                        tags: ["hotel"]
+                    }
                 ]
             },
             {
                 date: "4/2",
-                day: "Thu",
+                day: "週四",
                 fullDate: "2026/04/02",
-                city: "Rovaniemi",
-                temp: "-5°C",
-                icon: "✨", // 星星/放鬆
-                desc: "度假村放鬆",
+                title: "第 6 天 - 極光之夜",
+                location: "Apukka 度假村",
+                icon: "✨",
                 events: [
-                    { time: "All Day", icon: "🧖", title: "度假村自由活動", desc: "享受桑拿、雪地漫步，度過悠閒的一天。" },
-                    { time: "Night", icon: "🔥", title: "極光燒烤晚餐", desc: "旅程中最後一次極光守候。", tags: ["food"] }
+                    { 
+                        time: "白天", 
+                        icon: "☕", 
+                        title: "度假村自由活動", 
+                        desc: "享受 Apukka 度假村設施，體驗寧靜的北極時光。",
+                        tags: ["activity"]
+                    },
+                    { 
+                        time: "20:30", 
+                        icon: "🔥", 
+                        title: "第二次極光狩獵", 
+                        desc: "極光狩獵 x 拉普蘭燒烤 (含接送)。",
+                        list: ["再次挑戰追極光", "享受拉普蘭營火氛圍"],
+                        tags: ["food", "activity"]
+                    }
                 ]
             },
             {
                 date: "4/3",
-                day: "Fri",
+                day: "週五",
                 fullDate: "2026/04/03",
-                city: "Train",
-                temp: "-4°C",
-                icon: "🛤️", // 鐵軌
-                desc: "告別拉普蘭",
+                title: "第 7 天 - 告別羅瓦涅米",
+                location: "羅瓦涅米 > 火車",
+                icon: "👋",
                 events: [
-                    { time: "Daytime", icon: "👋", title: "自由活動", desc: "市區最後採買伴手禮。" },
-                    { time: "17:52", icon: "🚂", title: "VR 夜舖火車", desc: "Night train 266 返回赫爾辛基。", tags: ["train"] }
+                    { 
+                        time: "接駁", 
+                        icon: "🚕", 
+                        title: "前往火車站", 
+                        desc: "專車接送：從市中心前往羅瓦涅米火車站。",
+                        tags: ["transport"]
+                    },
+                    { 
+                        time: "17:52", 
+                        icon: "🚂", 
+                        title: "VR 夜舖火車 (266車次)", 
+                        desc: "返回赫爾辛基的夜舖火車。",
+                        list: ["發車：17:52 (羅瓦涅米)", "抵達：06:27 (赫爾辛基)", "包含：私人衛浴包廂"],
+                        tags: ["transport"]
+                    }
                 ]
             },
             {
                 date: "4/4",
-                day: "Sat",
+                day: "週六",
                 fullDate: "2026/04/04",
-                city: "Helsinki",
-                temp: "2°C",
-                icon: "🐟", // 魚/市集
-                desc: "農貿市集與湯",
+                title: "第 8 天 - 重返赫爾辛基",
+                location: "赫爾辛基",
+                icon: "🏢",
                 events: [
-                    { time: "06:27", icon: "📍", title: "抵達赫爾辛基", desc: "入住 Radisson RED (不含早)。", tags: ["hotel"] },
-                    { time: "Morning", icon: "🥣", title: "老農貿市集", desc: "Vanha Kauppahalli。必喝熱騰騰鮭魚湯。", link: "https://vanhakauppahalli.fi/en/", linkText: "市集官網", tags: ["food"] }
+                    { 
+                        time: "06:27", 
+                        icon: "📍", 
+                        title: "抵達赫爾辛基", 
+                        desc: "早晨抵達，準備前往飯店。" 
+                    },
+                    { 
+                        time: "15:00", 
+                        icon: "🏨", 
+                        title: "入住: Radisson RED", 
+                        desc: "再次入住 Radisson RED (共 3 晚)。僅含一日早餐。",
+                        tags: ["hotel"]
+                    }
                 ]
             },
             {
                 date: "4/5",
-                day: "Sun",
+                day: "週日",
                 fullDate: "2026/04/05",
-                city: "Helsinki",
-                temp: "3°C",
-                icon: "🛍️", // 購物
-                desc: "城市購物日",
+                title: "第 9 天 - 赫爾辛基探索",
+                location: "赫爾辛基",
+                icon: "🛍️",
                 events: [
-                    { time: "All Day", icon: "👠", title: "Shopping", desc: "Stockmann 百貨、Marimekko 設計品牌巡禮。", link: "https://www.stockmann.com/", linkText: "Stockmann" }
+                    { 
+                        time: "全日", 
+                        icon: "🚶", 
+                        title: "自由活動日", 
+                        desc: "建議行程：探索老農貿市集、岩石教堂或搭船去芬蘭堡。",
+                        tags: ["activity"]
+                    },
+                    { 
+                        time: "購物", 
+                        icon: "🎁", 
+                        title: "購物時光", 
+                        desc: "Stockmann 百貨或 Marimekko 採買紀念品。",
+                        tags: ["activity"]
+                    }
                 ]
             },
             {
                 date: "4/6",
-                day: "Mon",
+                day: "週一",
                 fullDate: "2026/04/06",
-                city: "Helsinki",
-                temp: "3°C",
-                icon: "🏰", // 芬蘭堡
-                desc: "古堡與咖啡",
+                title: "第 10 天 - 赫爾辛基漫遊",
+                location: "赫爾辛基",
+                icon: "☕",
                 events: [
-                    { time: "Morning", icon: "⛴️", title: "芬蘭堡", desc: "搭渡輪前往海上要塞 (世界遺產)。", link: "https://www.suomenlinna.fi/en/", linkText: "芬蘭堡官網" },
-                    { time: "Afternoon", icon: "☕", title: "咖啡廳巡禮", desc: "Fazer Café 或 Regatta，享受最後的芬蘭時光。" }
+                    { 
+                        time: "全日", 
+                        icon: "🥐", 
+                        title: "自由活動日", 
+                        desc: "享受悠閒的北歐咖啡廳文化 (推薦：Fazer Café)。",
+                        tags: ["activity"]
+                    }
                 ]
             },
             {
                 date: "4/7",
-                day: "Tue",
+                day: "週二",
                 fullDate: "2026/04/07",
-                city: "Helsinki",
-                temp: "3°C",
-                icon: "🛫", // 飛機起飛
-                desc: "啟程返家",
+                title: "第 11 天 - 啟程返家",
+                location: "赫爾辛基",
+                icon: "🛫",
                 events: [
-                    { time: "10:30", icon: "🚕", title: "前往機場", desc: "接駁至赫爾辛基萬塔機場。" },
-                    { time: "Flight", icon: "👋", title: "旅程結束", desc: "帶著滿滿的回憶回家囉！" }
+                    { 
+                        time: "上午", 
+                        icon: "🚕", 
+                        title: "前往機場", 
+                        desc: "專車接送至 HEL 機場 (我們會根據航班時間安排)。",
+                        tags: ["transport"]
+                    },
+                    { 
+                        time: "航班", 
+                        icon: "👋", 
+                        title: "旅程結束", 
+                        desc: "帶著極光的回憶回家！Thank you, Lapland Escape!" 
+                    }
                 ]
             }
         ];
 
-        // UI 渲染邏輯
+        // --- 核心程式邏輯 ---
         const tabsContainer = document.getElementById('tabsContainer');
-        const timelineContainer = document.getElementById('timelineContainer');
+        const contentContainer = document.getElementById('contentContainer');
         const heroIcon = document.getElementById('heroIcon');
-        const weatherTemp = document.getElementById('weatherTemp');
-        const weatherDesc = document.getElementById('weatherDesc');
+        const weatherInfo = document.getElementById('weatherInfo');
+        const weatherDate = document.getElementById('weatherDate');
 
         function init() {
             renderTabs();
-            selectDay(0);
+            selectDay(0); // 預設開啟第一天
         }
 
         function renderTabs() {
@@ -463,49 +581,71 @@
         function selectDay(index) {
             const data = tripData[index];
 
-            // 1. 更新 Tab 狀態
+            // 1. 更新 Tab 樣式
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             const activeTab = document.getElementById(`tab-${index}`);
             activeTab.classList.add('active');
             
-            // Tab 自動置中滾動
+            // 自動捲動 Tab
             activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 
-            // 2. 更新 Header 視覺 (加入動畫重置)
+            // 2. 更新 Header
+            // 重置動畫，讓切換時有反應
             heroIcon.style.animation = 'none';
-            heroIcon.offsetHeight; /* trigger reflow */
-            heroIcon.style.animation = 'float 3s ease-in-out infinite';
-            heroIcon.innerText = data.icon;
+            heroIcon.offsetHeight; 
+            heroIcon.style.animation = 'float 4s ease-in-out infinite';
             
-            weatherTemp.innerText = `${data.city} ${data.temp}`;
-            weatherDesc.innerText = data.desc;
+            heroIcon.innerText = data.icon;
+            weatherInfo.innerText = data.location;
+            weatherDate.innerText = data.fullDate;
 
-            // 3. 更新行程列表
-            let timelineHtml = `<div class="day-title fade-in">${data.fullDate}</div>`;
+            // 3. 渲染內容
+            let html = `
+                <div class="day-header fade-in">
+                    <h2>${data.title}</h2>
+                </div>
+            `;
             
             data.events.forEach(event => {
+                // 處理 Tags (翻譯標籤)
                 let tagsHtml = '';
                 if(event.tags) {
                     tagsHtml = '<div class="tags">';
                     event.tags.forEach(tag => {
-                        let text = tag === 'hotel' ? '住宿' : (tag === 'food' ? '餐飲' : '交通');
-                        tagsHtml += `<span class="tag ${tag}">${text}</span>`;
+                        let label = "";
+                        if(tag === 'hotel') label = "住宿";
+                        else if(tag === 'food') label = "餐飲";
+                        else if(tag === 'transport') label = "交通";
+                        else if(tag === 'activity') label = "行程";
+                        else label = tag;
+                        
+                        tagsHtml += `<span class="tag ${tag}">${label}</span>`;
                     });
                     tagsHtml += '</div>';
                 }
 
-                let linkHtml = '';
-                if(event.link) {
-                    linkHtml = `<a href="${event.link}" target="_blank" class="link-btn">🔗 ${event.linkText || '查看詳情'}</a>`;
+                // 處理清單 (List)
+                let listHtml = '';
+                if(event.list) {
+                    listHtml = '<ul class="card-list">';
+                    event.list.forEach(item => listHtml += `<li>${item}</li>`);
+                    listHtml += '</ul>';
                 }
 
-                timelineHtml += `
+                // 處理連結
+                let linkHtml = '';
+                if(event.link) {
+                    linkHtml = `<a href="${event.link}" target="_blank" class="link-btn">${event.linkText || '查看詳情'}</a>`;
+                }
+
+                html += `
                     <div class="timeline-item fade-in">
                         <div class="timeline-icon">${event.icon}</div>
                         <span class="time">${event.time}</span>
                         <div class="card">
                             <div class="card-title">${event.title}</div>
                             <div class="card-desc">${event.desc}</div>
+                            ${listHtml}
                             ${tagsHtml}
                             ${linkHtml}
                         </div>
@@ -513,9 +653,10 @@
                 `;
             });
 
-            timelineContainer.innerHTML = timelineHtml;
+            contentContainer.innerHTML = html;
         }
 
+        // 啟動！
         init();
     </script>
 </body>
