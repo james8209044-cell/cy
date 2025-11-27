@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 芬蘭極光之旅</title>
+    <style>
+        :root {
+            --primary: #005695; /* 芬蘭藍 */
+            --primary-light: #e6f2fa;
+            --accent: #ff6b6b;
+            --text: #333;
+            --gray: #666;
+            --bg: #f8f9fa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Microsoft JhengHei", "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            padding-bottom: 80px; /* 預留底部空間 */
+        }
+
+        /* --- Header & Weather --- */
+        .app-header {
+            background: linear-gradient(135deg, #0b2545 0%, #005695 100%);
+            color: white;
+            padding: 20px;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .app-title {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .weather-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+            border-radius: 16px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .weather-info h2 { margin: 0; font-size: 24px; }
+        .weather-info p { margin: 5px 0 0; font-size: 14px; opacity: 0.9; }
+        .weather-icon { font-size: 40px; }
+
+        /* --- Date Tabs --- */
+        .tabs-container {
+            margin-top: -10px;
+            padding: 20px 0 10px 0;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch; /* 讓 iOS 滑動順暢 */
+            scrollbar-width: none; /* Firefox 隱藏捲軸 */
+        }
+        .tabs-container::-webkit-scrollbar { display: none; /* Chrome 隱藏捲軸 */ }
+
+        .tab-spacer { display: inline-block; width: 20px; } /* 讓第一個 tab 不會貼邊 */
+
+        .tab {
+            display: inline-block;
+            background: white;
+            padding: 10px 18px;
+            border-radius: 20px;
+            margin-right: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--gray);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 86, 149, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* --- Timeline Content --- */
+        .content-container {
+            padding: 10px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            padding-bottom: 25px;
+            border-left: 2px solid #ddd;
+        }
+        
+        .timeline-item:last-child { border-left: 2px solid transparent; }
+
+        .timeline-dot {
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 2px solid var(--white);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        .time {
+            font-size: 13px;
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 0 8px 0;
+            color: var(--text);
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        /* Tags & Links */
+        .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .tag {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: #eee;
+            color: #555;
+        }
+        .tag.hotel { background: #e3f2fd; color: #1565c0; }
+        .tag.food { background: #fff3e0; color: #e65100; }
+
+        .link-btn {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--primary);
+            text-decoration: none;
+            border: 1px solid var(--primary-light);
+            padding: 4px 10px;
+            border-radius: 15px;
+            transition: background 0.2s;
+        }
+        .link-btn:hover { background: var(--primary-light); }
+
+        /* Animation */
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header & Weather -->
+    <div class="app-header">
+        <div class="app-title">🇫🇮 2026 芬蘭極光之旅</div>
+        <div class="weather-card" id="weatherCard">
+            <div class="weather-info">
+                <h2 id="weatherCity">Helsinki</h2>
+                <p id="weatherTemp">1°C / 陰天</p>
+                <p style="font-size:12px; opacity:0.7;">(3月歷史平均)</p>
+            </div>
+            <div class="weather-icon" id="weatherIcon">☁️</div>
+        </div>
+    </div>
+
+    <!-- Scrollable Date Tabs -->
+    <div class="tabs-container" id="tabsContainer">
+        <div class="tab-spacer"></div>
+        <!-- Tabs will be injected here by JS -->
+    </div>
+
+    <!-- Timeline Content -->
+    <div class="content-container" id="timelineContainer">
+        <!-- Itinerary will be injected here by JS -->
+    </div>
+
+    <script>
+        // --- 1. 行程資料庫 (包含連結與天氣設定) ---
+        const tripData = [
+            {
+                date: "3/28 (Sat)",
+                shortDate: "3/28",
+                city: "Helsinki",
+                temp: "1°C",
+                icon: "☁️",
+                events: [
+                    { time: "05:40", title: "班機抵達赫爾辛基", desc: "領取行李，接駁至市中心。", link: "https://www.finavia.fi/en/airports/helsinki-airport", linkText: "機場官網" },
+                    { time: "14:00", title: "入住 Radisson RED", desc: "Check-in 後稍作休息。飯店位於市中心，設計時尚。", link: "https://www.radissonhotels.com/en-us/hotels/radisson-red-helsinki", linkText: "飯店資訊", tags: ["hotel", "food"] },
+                    { time: "16:00", title: "市區自由活動", desc: "可步行至中央車站周邊或 Esplanadi 公園散步。", link: "https://www.myhelsinki.fi/zh", linkText: "赫爾辛基旅遊指南" }
+                ]
+            },
+            {
+                date: "3/29 (Sun)",
+                shortDate: "3/29",
+                city: "Helsinki > Train",
+                temp: "0°C",
+                icon: "🚂",
+                events: [
+                    { time: "Daytime", title: "赫爾辛基自由活動", desc: "全日自由探索，建議參觀頌歌圖書館 (Oodi)。", link: "https://oodihelsinki.fi/en/", linkText: "Oodi 圖書館" },
+                    { time: "19:29", title: "搭乘 VR 夜舖火車", desc: "Night train 265 前往羅瓦涅米。私人衛浴包廂。", link: "https://www.vr.fi/en", linkText: "VR 芬蘭國鐵", tags: ["train"] }
+                ]
+            },
+            {
+                date: "3/30 (Mon)",
+                shortDate: "3/30",
+                city: "Rovaniemi",
+                temp: "-6°C",
+                icon: "❄️",
+                events: [
+                    { time: "07:20", title: "抵達羅瓦涅米", desc: "進入北極圈拉普蘭地區。" },
+                    { time: "10:00", title: "市區民宿 Check-in", desc: "入住後可逛逛市區百貨或二手店 (Fida / Kierrätyskeskus)。", tags: ["hotel"] },
+                    { time: "18:00", title: "北極冰雪城堡", desc: "晚餐與參觀。全由冰雪打造的奇幻世界。", link: "https://experience365.fi/snowcastle-of-kemi/", linkText: "冰雪城堡官網", tags: ["food"] }
+                ]
+            },
+            {
+                date: "3/31 (Tue)",
+                shortDate: "3/31",
+                city: "Rovaniemi",
+                temp: "-7°C",
+                icon: "🦌",
+                events: [
+                    { time: "Morning", title: "馴鹿雪橇體驗", desc: "400公尺體驗 + 農場探訪。", link: "https://santaclausvillage.info/activities/reindeer-rides/", linkText: "馴鹿體驗資訊" },
+                    { time: "Afternoon", title: "聖誕老人村", desc: "跨越北極圈線、寄明信片。", link: "https://santaclausvillage.info/", linkText: "聖誕老人村官網" },
+                    { time: "15:00", title: "哈士奇雪橇", desc: "500公尺體驗，感受速度感。", link: "https://huskypark.fi/", linkText: "哈士奇公園" },
+                    { time: "Night", title: "極光 x 拉普蘭燒烤", desc: "追逐歐若拉，享用在地燒烤晚餐。", tags: ["food"] }
+                ]
+            },
+            {
+                date: "4/1 (Wed)",
+                shortDate: "4/1",
+                city: "Sweden/Kemi",
+                temp: "-5°C",
+                icon: "🚢",
+                events: [
+                    { time: "09:00", title: "Polar Explorer 破冰船", desc: "瑞典破冰船體驗，穿著龍蝦裝漂浮在冰海上。", link: "https://www.icebreaker.fi/", linkText: "Polar Explorer 官網" },
+                    { time: "Afternoon", title: "瑞典 IKEA 打卡", desc: "邊境購物與用餐。" },
+                    { time: "Evening", title: "入住玻璃屋", desc: "躺在床上看星空與極光。", tags: ["hotel"] }
+                ]
+            },
+            {
+                date: "4/2 (Thu)",
+                shortDate: "4/2",
+                city: "Rovaniemi",
+                temp: "-5°C",
+                icon: "🌌",
+                events: [
+                    { time: "All Day", title: "度假村自由活動", desc: "享受玻璃屋設施，桑拿或雪地漫步。" },
+                    { time: "Night", title: "極光燒烤晚餐", desc: "最後一晚的極光守候。", tags: ["food"] }
+                ]
+            },
+            {
+                date: "4/3 (Fri)",
+                shortDate: "4/3",
+                city: "Rovaniemi > Train",
+                temp: "-4°C",
+                icon: "🛤️",
+                events: [
+                    { time: "Daytime", title: "告別羅瓦涅米", desc: "市區最後採買。" },
+                    { time: "17:52", title: "VR 夜舖火車", desc: "Night train 266 返回赫爾辛基。", tags: ["train"] }
+                ]
+            },
+            {
+                date: "4/4 (Sat)",
+                shortDate: "4/4",
+                city: "Helsinki",
+                temp: "2°C",
+                icon: "🐟",
+                events: [
+                    { time: "06:27", title: "抵達赫爾辛基", desc: "再次入住 Radisson RED (不含早)。", tags: ["hotel"] },
+                    { time: "Morning", title: "老農貿市集", desc: "Vanha Kauppahalli。必喝魚湯 (Soppakeittiö)。", link: "https://vanhakauppahalli.fi/en/", linkText: "老農貿市集官網", tags: ["food"] }
+                ]
+            },
+            {
+                date: "4/5 (Sun)",
+                shortDate: "4/5",
+                city: "Helsinki",
+                temp: "3°C",
+                icon: "🛍️",
+                events: [
+                    { time: "All Day", title: "購物與觀光", desc: "Stockmann 百貨、Marimekko 專賣店。", link: "https://www.stockmann.com/", linkText: "Stockmann 百貨" }
+                ]
+            },
+            {
+                date: "4/6 (Mon)",
+                shortDate: "4/6",
+                city: "Helsinki",
+                temp: "3°C",
+                icon: "🏰",
+                events: [
+                    { time: "Morning", title: "芬蘭堡 (Suomenlinna)", desc: "搭乘渡輪前往海上要塞 (世界遺產)。", link: "https://www.suomenlinna.fi/en/", linkText: "芬蘭堡官網" },
+                    { time: "Afternoon", title: "咖啡廳巡禮", desc: "Fazer Café 或 Regatta。", link: "https://www.fazer.com/visit-us/fazer-cafe-kluuvikatu-3/", linkText: "Fazer 咖啡" }
+                ]
+            },
+            {
+                date: "4/7 (Tue)",
+                shortDate: "4/7",
+                city: "Helsinki",
+                temp: "3°C",
+                icon: "✈️",
+                events: [
+                    { time: "10:30", title: "前往機場", desc: "接駁至赫爾辛基萬塔機場。" },
+                    { time: "Flight", title: "啟程返家", desc: "帶著滿滿的回憶回家囉！" }
+                ]
+            }
+        ];
+
+        // --- 2. 程式邏輯 (渲染畫面) ---
+        const tabsContainer = document.getElementById('tabsContainer');
+        const timelineContainer = document.getElementById('timelineContainer');
+        const weatherCity = document.getElementById('weatherCity');
+        const weatherTemp = document.getElementById('weatherTemp');
+        const weatherIcon = document.getElementById('weatherIcon');
+
+        // 初始化
+        function init() {
+            renderTabs();
+            selectDay(0); // 預設顯示第一天
+        }
+
+        // 產生日期 Tabs
+        function renderTabs() {
+            let html = '<div class="tab-spacer"></div>';
+            tripData.forEach((day, index) => {
+                html += `<div class="tab" onclick="selectDay(${index})" id="tab-${index}">${day.shortDate}</div>`;
+            });
+            html += '<div class="tab-spacer"></div>';
+            tabsContainer.innerHTML = html;
+        }
+
+        // 切換日期並顯示內容
+        function selectDay(index) {
+            const data = tripData[index];
+
+            // 1. 更新 Tab 樣式
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`tab-${index}`).classList.add('active');
+            
+            // 自動捲動 Tab 到中間 (簡單版)
+            const activeTab = document.getElementById(`tab-${index}`);
+            tabsContainer.scrollTo({
+                left: activeTab.offsetLeft - (window.innerWidth / 2) + (activeTab.clientWidth / 2),
+                behavior: 'smooth'
+            });
+
+            // 2. 更新天氣卡片
+            weatherCity.innerText = data.city;
+            weatherTemp.innerText = `${data.temp}`;
+            weatherIcon.innerText = data.icon;
+
+            // 3. 更新時間軸內容
+            let timelineHtml = `<h3 style="margin-bottom:20px; text-align:center;">📅 ${data.date}</h3>`;
+            
+            data.events.forEach(event => {
+                // 處理標籤
+                let tagsHtml = '';
+                if(event.tags) {
+                    tagsHtml = '<div class="tags">';
+                    event.tags.forEach(tag => {
+                        let icon = tag === 'hotel' ? '🏨' : (tag === 'food' ? '🍴' : '✨');
+                        let text = tag === 'hotel' ? '住宿' : (tag === 'food' ? '餐飲' : '行程');
+                        tagsHtml += `<span class="tag ${tag}">${icon} ${text}</span>`;
+                    });
+                    tagsHtml += '</div>';
+                }
+
+                // 處理連結
+                let linkHtml = '';
+                if(event.link) {
+                    linkHtml = `<a href="${event.link}" target="_blank" class="link-btn">🔗 ${event.linkText || '查看資訊'}</a>`;
+                }
+
+                timelineHtml += `
+                    <div class="timeline-item fade-in">
+                        <div class="timeline-dot"></div>
+                        <span class="time">${event.time}</span>
+                        <div class="card">
+                            <div class="card-title">${event.title}</div>
+                            <div class="card-desc">${event.desc}</div>
+                            ${tagsHtml}
+                            ${linkHtml}
+                        </div>
+                    </div>
+                `;
+            });
+
+            timelineContainer.innerHTML = timelineHtml;
+        }
+
+        // 啟動 App
+        init();
+
+    </script>
+</body>
+</html>
